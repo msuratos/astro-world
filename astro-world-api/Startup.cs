@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using astro_world_api.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +33,8 @@ namespace astro_world_api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Astro World Api", Version = "v1" });
             });
+
+            services.AddDbContext<AstroWorldDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AstroWorldDbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
