@@ -33,7 +33,8 @@ namespace astro_world_api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Astro World Api", Version = "v1" });
             });
-
+            
+            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<AstroWorldDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AstroWorldDbContext")));
         }
 
