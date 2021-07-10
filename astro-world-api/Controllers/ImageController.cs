@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -57,80 +58,76 @@ namespace astro_world_api.Controllers
     // Refer to https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0#upload-large-files-with-streaming
     [HttpPost]
     [Route("user/{userid:int}")]
+    [DisableFormValueModelBinding]
     public async Task<IActionResult> UploadPhysical(int userid)
     {
       if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
       {
-        ModelState.AddModelError("File",
-            $"The request couldn't be processed (Error 1).");
-        // Log error
+        var errorMessage = $"The request couldn't be processed (Error 1). \r\nContent Type is incorrect: {Request.ContentType}";
+        ModelState.AddModelError("File", errorMessage);
+        _logger.LogError(errorMessage);
 
         return BadRequest(ModelState);
       }
 
-      var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType),
-                                                          _defaultFormOptions.MultipartBoundaryLengthLimit);
+      var boundary = MultipartRequestHelper
+        .GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
       var reader = new MultipartReader(boundary, HttpContext.Request.Body);
       var section = await reader.ReadNextSectionAsync();
 
       while (section != null)
       {
-        var hasContentDispositionHeader =
-            ContentDispositionHeaderValue.TryParse(
-                section.ContentDisposition, out var contentDisposition);
+        var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
 
         if (hasContentDispositionHeader)
         {
-          // This check assumes that there's a file
-          // present without form data. If form data
-          // is present, this method immediately fails
-          // and returns the model error.
-          if (!MultipartRequestHelper
-              .HasFileContentDisposition(contentDisposition))
+          // This check assumes that there's a file present without form data. If form data
+          // is present, this method immediately fails and returns the model error.
+          if (!MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
           {
-            ModelState.AddModelError("File",
-                $"The request couldn't be processed (Error 2).");
-            // Log error
+            var errorMessage = "The request couldn't be processed (Error 2). \r\nContent is not a file type.";
+            ModelState.AddModelError("File", errorMessage);
+            _logger.LogError(errorMessage);
 
             return BadRequest(ModelState);
           }
           else
           {
-            // Don't trust the file name sent by the client. To display
-            // the file name, HTML-encode the value.
-            var trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                    contentDisposition.FileName.Value);
+            // Don't trust the file name sent by the client. To display the file name, HTML-encode the value.
+            var trustedFileNameForDisplay = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
             var trustedFileNameForFileStorage = Path.GetRandomFileName();
 
             // **WARNING!**
-            // In the following example, the file is saved without
-            // scanning the file's contents. In most production
-            // scenarios, an anti-virus/anti-malware scanner API
-            // is used on the file before making the file available
-            // for download or for use by other systems. 
-            // For more information, see the topic that accompanies 
-            // this sample.
+            // In the following example, the file is saved without scanning the file's contents. In most production
+            // scenarios, an anti-virus/anti-malware scanner API is used on the file before making the file available
+            // for download or for use by other systems. For more information, see the topic that accompanies this sample.
 
-            var streamedFileContent = await FileHelpers.ProcessStreamedFile(
-                section, contentDisposition, ModelState,
-                _permittedExtensions, _fileSizeLimit);
+            var streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState,
+              _permittedExtensions, _fileSizeLimit);
 
             if (!ModelState.IsValid)
             {
               return BadRequest(ModelState);
             }
 
-            using (var targetStream = System.IO.File.Create(
-                Path.Combine(_targetFilePath, trustedFileNameForFileStorage)))
+            //TODO: change to use Azure Storage
+            using (var targetStream = System.IO.File.Create(Path.Combine(_targetFilePath, trustedFileNameForFileStorage)))
             {
               await targetStream.WriteAsync(streamedFileContent);
 
               _logger.LogInformation(
-                  "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
-                  "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
-                  trustedFileNameForDisplay, _targetFilePath,
-                  trustedFileNameForFileStorage);
+                  $"Uploaded file '{trustedFileNameForDisplay}' saved to " +
+                  $"'{_targetFilePath}' as {trustedFileNameForFileStorage}");
             }
+
+            // Save to database. Associate file to user
+            await _context.Images.AddAsync(new Image
+            {
+              CreatedDate = DateTimeOffset.Now.DateTime,
+              FkUserId = userid,
+              PathStored = $"{_targetFilePath}{trustedFileNameForFileStorage}"
+            });
+            await _context.SaveChangesAsync();
           }
         }
 
