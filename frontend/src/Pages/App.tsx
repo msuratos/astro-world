@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../assets/images/astro-blue.png';
 import './App.css';
+import AstroBackground from '../components/AstroBackgroud';
 
 function App() {
   const onButtonClick = (event:any) => {
@@ -9,6 +10,7 @@ function App() {
 
   return (
     <div className="App">
+      <AstroBackground />
       <div className="container">
         <div className="App-logo" >
           <img src={logo} alt="Astro Pic" title="Astro Pic" />
