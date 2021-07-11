@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../logo.svg';
+import logo from '../assets/images/astro-blue.png';
 import './App.css';
 
 function App() {
@@ -10,9 +10,11 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-        <img src={logo} className="App-logo" alt="logo" />
+        <div className="App-logo" >
+          <img src={logo} alt="Astro Pic" title="Astro Pic" />
+        </div>
         <section>
-          <div className="title">ASTRO BLUE'S 1<sup>ST</sup> BIRTHDAY!</div>
+          <div className="title">ASTRO BLUE <br />TURNS ONE!</div>
           <label><b>Upload Pics</b></label>
           <button className="btn btn__secondary" value="anonymous" onClick={onButtonClick}>Anonymously</button>
           <button className="btn btn__secondary" value="raffle" onClick={onButtonClick}>For Raffle</button>
