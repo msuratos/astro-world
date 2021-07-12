@@ -15,8 +15,11 @@ function App() {
         <div className="App-logo" >
           <img src={logo} alt="Astro Pic" title="Astro Pic" />
         </div>
-        <section>
-          <div className="title">ASTRO BLUE <br />TURNS ONE!</div>
+        <section className="App-details">
+          <div className="title">
+            <section className="title-name">ASTRO BLUE</section>
+            <section className="title-desc">TURNS ONE!</section>
+          </div>
           <label><b>Upload Pics</b></label>
           <button className="btn btn__secondary" value="anonymous" onClick={onButtonClick}>Anonymously</button>
           <button className="btn btn__secondary" value="raffle" onClick={onButtonClick}>For Raffle</button>
