@@ -1,0 +1,23 @@
+.raffle {
+  padding: .5rem 1.2rem;
+}
+
+.raffle-title {
+  text-align: center;
+  font-family: 'Adventure-Subtitles';
+}
+
+.raffle h3 {
+  margin: .5rem 0;
+}
+
+.raffle label {
+  font-weight: 600;
+}
+
+.raffle input {
+  border: 1px solid var(--greyLight-3);
+  border-radius: 7px;
+  height: 2rem;
+  width: 100%;
+}

@@ -1,12 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+import AstroBackground from './components/AstroBackgroud';
 import App from './Pages/App';
+import Raffle from './Pages/Raffle';
 import reportWebVitals from './reportWebVitals';
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <>
+      <AstroBackground />
+      <div className="container">
+        <Router>
+          <Switch>
+            <Route exact path="/" component={App} />
+            <Route exact path="/raffle" component={Raffle} />
+          </Switch>
+        </Router>
+      </div>
+    </>
   </React.StrictMode>,
   document.getElementById('root')
 );

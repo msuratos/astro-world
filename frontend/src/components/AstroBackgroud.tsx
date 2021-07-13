@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import rocket from '../assets/images/rocket.png';
 import planet from '../assets/images/planet.png';
 import star from '../assets/images/star.png';
@@ -85,7 +85,7 @@ const AstroBackground = () => {
     maxHeight: '30%',
     maxWidth: '30%',
     backgroundColor: '#f9f9f9',
-    top: `${Math.random() * 150}px`,
+    top: `calc(10% - ${Math.random() * 100}px)`,
     left: `${Math.random() * (window.innerWidth - 50)}px`
   };
 

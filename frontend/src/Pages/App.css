@@ -23,24 +23,6 @@
     max-width: 100%;
   }
 
-.container {
-  background: var(--greyLight-1);
-  border-radius: 1.5rem;
-  box-shadow: 0.8rem 0.8rem 1.4rem var(--greyLight-2), -0.2rem -0.2rem 1.8rem var(--white);
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -60%);
-  width: 80%;;
-  /* -webkit-border-radius: 5px; 
-  -webkit-box-shadow: 12px 12px 24px #d9d9d9, -12px -12px 24px #ffffff; */
-}
-
-  .container label {
-    color: #636363;
-    display: block;
-  }
-
 .title {
   border: 1px solid #4e9cf5;
   border-radius: 1rem;
