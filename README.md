@@ -11,6 +11,7 @@ Web application that will allow end users to upload images and answer some trivi
 
 ### Frontend
 - React
+- NPM (Node Package Manager)
 
 ## Backend
 
@@ -24,3 +25,9 @@ Web application that will allow end users to upload images and answer some trivi
 2. `dotnet ef database update`
 3. `dotnet ef migrations script`
 4. `dotnet ef migrations remove`
+
+## Frontend
+
+### Debug
+1. `npm i`
+2. `npm start`
