@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ImageUpload from "../components/ImageUpload";
 import UserInfo from "../components/UserInfo";
 import './Raffle.css';
 
@@ -13,7 +14,7 @@ const Raffle = () => {
     <div className="raffle">
       <h2 className="raffle-title">RAFFLE</h2>
       { showUserInfo && <UserInfo display={setShowUserInfo} />}
-      { !showUserInfo && <div>Upload images</div> }
+      { !showUserInfo && <ImageUpload /> }
     </div>
   );
 };
