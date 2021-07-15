@@ -30,4 +30,5 @@ Web application that will allow end users to upload images and answer some trivi
 
 ### Debug
 1. `npm i`
-2. `npm start`
+2. Add .env file and add variable `REACT_APP_API_URL=(URL of api)`
+3. `npm start`
