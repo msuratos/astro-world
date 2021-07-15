@@ -10,10 +10,13 @@ const Raffle = () => {
   const createUser = async () => {
     try {
       const options:RequestInit = { 
-        method: 'POST', 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ FirstName: firstName, LastName: lastName })
       };
-      const resp = await fetch(process.env.REACT_APP_API_URL + '/users', options);
+      const resp = await fetch(process.env.REACT_APP_API_URL + '/user', options);
       if (!resp.ok) throw resp;
   
       const date = new Date();
@@ -23,7 +26,7 @@ const Raffle = () => {
       setFirstName('');
       setLastName('');
     } catch (error) {
-      console.log('Error creating user', error);
+      console.log('Error creating user', error, await error.text());
     }
   };
 

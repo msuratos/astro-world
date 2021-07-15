@@ -33,6 +33,14 @@ namespace astro_world_api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Astro World Api", Version = "v1" });
             });
+
+            services.AddCors(opt => {
+                opt.AddDefaultPolicy(builder => {
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.WithOrigins(Configuration["AllowedOrigins"]);
+                });
+            });
             
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<AstroWorldDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("AstroWorldDbContext")));
@@ -48,6 +56,7 @@ namespace astro_world_api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "astro_world_api v1"));
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
