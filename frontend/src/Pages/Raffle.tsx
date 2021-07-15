@@ -5,6 +5,7 @@ import './Raffle.css';
 
 const Raffle = () => {
   const [showUserInfo, setShowUserInfo] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (document.cookie.includes('displayname')) setShowUserInfo(false);
@@ -13,8 +14,9 @@ const Raffle = () => {
   return (
     <div className="raffle">
       <h2 className="raffle-title">RAFFLE</h2>
-      { showUserInfo && <UserInfo display={setShowUserInfo} />}
+      { showUserInfo && <UserInfo display={setShowUserInfo} showloading={setLoading} />}
       { !showUserInfo && <ImageUpload /> }
+      { loading && <div className="raffle-loading">loading...</div> }
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { createUser } from "../api/userApi";
 
 interface UserInfoProps {
   display: React.Dispatch<React.SetStateAction<boolean>>
+  showloading: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const UserInfo = (props:UserInfoProps) => {
@@ -16,7 +17,9 @@ const UserInfo = (props:UserInfoProps) => {
   const create = async () => {
     try {
       // Call api to create user
+      props.showloading(true);
       const resp = await createUser({ FirstName: firstName, LastName: lastName });
+      props.showloading(false);
       if (!resp.ok) throw resp;
   
       // Set expiration date to the next day for cookie
