@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ImageUpload from "../components/ImageUpload";
+import Loading from "../components/Loading";
 import UserInfo from "../components/UserInfo";
 import './Raffle.css';
 
@@ -15,8 +16,8 @@ const Raffle = () => {
     <div className="raffle">
       <h2 className="raffle-title">RAFFLE</h2>
       { showUserInfo && <UserInfo display={setShowUserInfo} showloading={setLoading} />}
-      { !showUserInfo && <ImageUpload showloading={setLoading} /> }
-      { loading && <div className="raffle-loading">loading...</div> }
+      { !showUserInfo && <ImageUpload showloading={setLoading} isAnonymous={false} /> }
+      { loading && <Loading /> }
     </div>
   );
 };

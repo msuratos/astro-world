@@ -90,3 +90,14 @@ code {
     color: #636363;
     display: block;
   }
+
+  .loading {
+    background-color: #c0c0c069;
+    border-radius: 1.5rem;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+  }

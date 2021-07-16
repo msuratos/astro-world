@@ -57,9 +57,9 @@ namespace astro_world_api.Controllers
 
     // Refer to https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0#upload-large-files-with-streaming
     [HttpPost]
-    [Route("user/{userid:int}")]
+    [Route("user/{userid:int?}")]
     [DisableFormValueModelBinding]
-    public async Task<IActionResult> UploadPhysical(int userid)
+    public async Task<IActionResult> UploadPhysical(int? userid)
     {
       if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
       {
@@ -124,7 +124,7 @@ namespace astro_world_api.Controllers
             await _context.Images.AddAsync(new Image
             {
               CreatedDate = DateTimeOffset.Now.DateTime,
-              FkUserId = userid,
+              FkUserId = userid == 0 ? null : userid,
               PathStored = $"{_targetFilePath}{trustedFileNameForFileStorage}"
             });
             await _context.SaveChangesAsync();

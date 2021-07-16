@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { getCookie } from "../utils/cookieHelper";
 
 interface ImageUploadProps {
+  isAnonymous: boolean,
   showloading: React.Dispatch<React.SetStateAction<boolean>>
 };
 
@@ -9,8 +10,15 @@ const ImageUpload = (props:ImageUploadProps) => {
   const [displayName, setDisplayName] = useState('');
   const imageInputRef = useRef<any>({});
   const resultRef = useRef<any>({});
-  const userId = getCookie('userid');
-  const imageUrl = `${process.env.REACT_APP_API_URL}/image/user/${userId}`;
+
+  let userId: string | null;
+  let imageUrl: string = '';
+
+  if (props.isAnonymous) imageUrl = `${process.env.REACT_APP_API_URL}/image/user`;
+  else {
+    userId = getCookie('userid');
+    imageUrl = `${process.env.REACT_APP_API_URL}/image/user/${userId}`;
+  }
 
   const uploadImageFormSubmit = async (e:FormEvent<HTMLFormElement>) => {
     resultRef.current.value = '';
@@ -38,7 +46,7 @@ const ImageUpload = (props:ImageUploadProps) => {
 
   return (
     <>
-      <h3>Hi, {displayName}!</h3>
+      { props.isAnonymous ? <></> : <h3>Hi, {displayName}!</h3> }
       <form encType="multipart/form-data" method="post" action={imageUrl} onSubmit={uploadImageFormSubmit}>
         <label htmlFor="images">Upload Images</label>
         <input ref={imageInputRef} type="file" name="images" title="File Upload" multiple />
