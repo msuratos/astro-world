@@ -11,6 +11,7 @@ namespace astro_world_api.Persistance.Configurations
           builder.HasKey(key => key.ImageId);
           builder.Property(prop => prop.ImageId).UseIdentityColumn();
           builder.Property(prop => prop.PathStored).IsRequired().HasMaxLength(100).IsUnicode();
+          builder.Ignore(expression => expression.User);
 
           builder.HasOne<User>().WithMany(m => m.Images).HasForeignKey(fk => fk.FkUserId);
         }
