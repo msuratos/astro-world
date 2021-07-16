@@ -15,7 +15,7 @@ const Raffle = () => {
     <div className="raffle">
       <h2 className="raffle-title">RAFFLE</h2>
       { showUserInfo && <UserInfo display={setShowUserInfo} showloading={setLoading} />}
-      { !showUserInfo && <ImageUpload /> }
+      { !showUserInfo && <ImageUpload showloading={setLoading} /> }
       { loading && <div className="raffle-loading">loading...</div> }
     </div>
   );
