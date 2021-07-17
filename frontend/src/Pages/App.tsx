@@ -7,6 +7,9 @@ function App() {
   const onButtonClick = (event: any) => {
     const value = event.target.value;
     switch (value) {
+      case 'anonymous':
+        history.push('/anonymous');
+        break;
       case 'raffle':
         history.push('/raffle');
         break;    

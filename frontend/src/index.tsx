@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import AstroBackground from './components/AstroBackgroud';
 import App from './Pages/App';
+import Anonymous from './Pages/Anonymous';
 import Raffle from './Pages/Raffle';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Router>
           <Switch>
             <Route exact path="/" component={App} />
+            <Route exact path="/anonymous" component={Anonymous} />
             <Route exact path="/raffle" component={Raffle} />
           </Switch>
         </Router>

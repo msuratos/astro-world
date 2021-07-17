@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using astro_world_api.Persistance;
 
 namespace astro_world_api.Persistance.Migrations
 {
     [DbContext(typeof(AstroWorldDbContext))]
-    partial class AstroWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210716190329_Image_User_Optional")]
+    partial class Image_User_Optional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

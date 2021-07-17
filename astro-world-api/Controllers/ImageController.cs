@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using astro_world_api.Configs;
 using astro_world_api.Filters;
 using astro_world_api.Utilities;
 using astro_world_api.Persistance;
@@ -25,26 +27,21 @@ namespace astro_world_api.Controllers
   public class ImageController : ControllerBase
   {
     private readonly AstroWorldDbContext _context;
-    private readonly long _fileSizeLimit;
     private readonly ILogger<ImageController> _logger;
+    private readonly AzureStorageConfig _azureStorageConfig;
+    private readonly long _fileSizeLimit;
     private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".png" };
-    private readonly string _targetFilePath;
 
     // Get the default form options so that we can use them to set the default 
     // limits for request body data.
     private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-    public ImageController(ILogger<ImageController> logger, AstroWorldDbContext context, IConfiguration config)
+    public ImageController(ILogger<ImageController> logger, AstroWorldDbContext context, IConfiguration config, IOptions<AzureStorageConfig> options)
     {
       _context = context;
       _logger = logger;
       _fileSizeLimit = config.GetValue<long>("FileSizeLimit");
-
-      // To save physical files to a path provided by configuration:
-      // _targetFilePath = config.GetValue<string>("StoredFilesPath");
-
-      // To save physical files to the temporary files folder, use:
-      _targetFilePath = Path.GetTempPath();
+      _azureStorageConfig = options.Value;
     }
 
     [HttpGet]
@@ -57,9 +54,9 @@ namespace astro_world_api.Controllers
 
     // Refer to https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0#upload-large-files-with-streaming
     [HttpPost]
-    [Route("user/{userid:int}")]
+    [Route("user/{userid:int?}")]
     [DisableFormValueModelBinding]
-    public async Task<IActionResult> UploadPhysical(int userid)
+    public async Task<IActionResult> UploadPhysical(int? userid)
     {
       if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
       {
@@ -110,22 +107,18 @@ namespace astro_world_api.Controllers
               return BadRequest(ModelState);
             }
 
-            //TODO: change to use Azure Storage
-            using (var targetStream = System.IO.File.Create(Path.Combine(_targetFilePath, trustedFileNameForFileStorage)))
-            {
-              await targetStream.WriteAsync(streamedFileContent);
-
-              _logger.LogInformation(
-                  $"Uploaded file '{trustedFileNameForDisplay}' saved to " +
-                  $"'{_targetFilePath}' as {trustedFileNameForFileStorage}");
-            }
+            // Upload to Azure
+            var stream = new MemoryStream(streamedFileContent);
+            await StorageHelper.UploadFileToStorage(stream, trustedFileNameForFileStorage, _azureStorageConfig);
+            _logger.LogInformation($"Uploaded file '{trustedFileNameForDisplay}' saved to " +
+                  $"'{_azureStorageConfig.FileShareUri}' as {trustedFileNameForFileStorage}");
 
             // Save to database. Associate file to user
             await _context.Images.AddAsync(new Image
             {
               CreatedDate = DateTimeOffset.Now.DateTime,
-              FkUserId = userid,
-              PathStored = $"{_targetFilePath}{trustedFileNameForFileStorage}"
+              FkUserId = userid == 0 ? null : userid,
+              PathStored = $"{_azureStorageConfig.FileShareUri}/images/{trustedFileNameForFileStorage}"
             });
             await _context.SaveChangesAsync();
           }
