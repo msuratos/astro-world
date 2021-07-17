@@ -14,7 +14,7 @@ variables:
   buildConfiguration: 'Release'
 
 jobs:
-- job: dotnet-build-deploy
+- job: dotnet_build_deploy
   displayName: Build & Deploy DotNet Web Api
   pool:
     vmImage: 'ubuntu-latest'
@@ -48,7 +48,7 @@ jobs:
       packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
       RuntimeStack: 'DOTNETCORE|5.0'
       AppSettings: '-Scope $(Scope) -GrantType $(GrantType) -ConnectionStrings__AstroWorldDbContext $(AstroWorldDbContext) -ClientSecret $(ClientSecret) -AzureStorageConfig__FileShareUri $(FileShareUri) -AzureStorageConfig__AccountName $(AccountName) -AzureStorageConfig__AccountKey $(AccountKey) -AzureAd__TenantId $(TenantId) -AzureAd__Instance $(Instance) -AzureAd__ClientId $(ClientId) -ApiKey $(ApiKey)'
-- job: react-build-deploy
+- job: react_build_deploy
   displayName: Build & Deploy React App
   pool:
     vmImage: 'ubuntu-latest'
