@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { createUser } from "../api/userApi";
+import RootContext from '../RootContext';
 
 interface UserInfoProps {
   display: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,6 +11,7 @@ interface UserInfoProps {
 
 const UserInfo = (props:UserInfoProps) => {
   const history = useHistory();
+  const rootContext = useContext(RootContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
@@ -18,7 +20,7 @@ const UserInfo = (props:UserInfoProps) => {
     try {
       // Call api to create user
       props.showloading(true);
-      const resp = await createUser({ FirstName: firstName, LastName: lastName });
+      const resp = await createUser({ FirstName: firstName, LastName: lastName }, rootContext.accessToken);
       props.showloading(false);
       if (!resp.ok) throw resp;
   
