@@ -57,6 +57,11 @@ jobs:
       inputs:
         script: 'touch .env && echo ''REACT_APP_API_URL=''$(ApiUrl) >> .env && echo ''REACT_APP_API_KEY=''$(ApiKey) >> .env && cat .env'
         workingDirectory: './frontend'
+    - task: CmdLine@2
+      displayName: Create staticwebapp.config.json
+      inputs:
+        script: 'touch staticwebapp.config.json && echo ''{"navigationFallback":{"rewrite":"/index.html","exclude":["/images/*.{png,jpg,gif}","/css/*"]}}'' >> staticwebapp.config.json && cat staticwebapp.config.json'
+        workingDirectory: './frontend'
     - task: Npm@1
       displayName: NPM Install
       inputs:
