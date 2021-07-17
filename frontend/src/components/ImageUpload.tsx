@@ -1,4 +1,6 @@
-import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import { uploadImage } from '../api/imageApi';
+import RootContext from '../RootContext';
 import { getCookie } from "../utils/cookieHelper";
 
 interface ImageUploadProps {
@@ -8,17 +10,9 @@ interface ImageUploadProps {
 
 const ImageUpload = (props:ImageUploadProps) => {
   const [displayName, setDisplayName] = useState('');
+  const rootContext = useContext(RootContext);
   const imageInputRef = useRef<any>({});
   const resultRef = useRef<any>({});
-
-  let userId: string | null;
-  let imageUrl: string = '';
-
-  if (props.isAnonymous) imageUrl = `${process.env.REACT_APP_API_URL}/image/user`;
-  else {
-    userId = getCookie('userid');
-    imageUrl = `${process.env.REACT_APP_API_URL}/image/user/${userId}`;
-  }
 
   const uploadImageFormSubmit = async (e:FormEvent<HTMLFormElement>) => {
     resultRef.current.value = '';
@@ -26,10 +20,7 @@ const ImageUpload = (props:ImageUploadProps) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const resp = await fetch(imageUrl, {
-      method: 'POST',
-      body: formData
-    });
+    const resp = await uploadImage(props.isAnonymous, formData, rootContext.accessToken);
 
     if (!resp.ok) {
       resultRef.current.value = 'Failed to upload. Try again: ' + resp.status + ' ' + resp.statusText;
@@ -47,7 +38,7 @@ const ImageUpload = (props:ImageUploadProps) => {
   return (
     <>
       { props.isAnonymous ? <></> : <h3>Hi, {displayName}!</h3> }
-      <form encType="multipart/form-data" method="post" action={imageUrl} onSubmit={uploadImageFormSubmit}>
+      <form encType="multipart/form-data" method="post" onSubmit={uploadImageFormSubmit}>
         <label htmlFor="images">Upload Images</label>
         <input ref={imageInputRef} type="file" name="images" title="File Upload" multiple />
         <button className="btn btn__primary" style={{width:'100%', height:'3.0rem'}}>Upload</button>

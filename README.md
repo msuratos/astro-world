@@ -38,5 +38,7 @@ DBCC CHECKIDENT(<table>, RESEED, <new seed value>); GO;
 
 ### Debug
 1. `npm i`
-2. Add .env file and add variable `REACT_APP_API_URL=(URL of api)`
+2. Add .env file and add variables
+   1. `REACT_APP_API_URL=(API URL)`
+   2. `REACT_APP_API_KEY=(API KEY)`
 3. `npm start`
