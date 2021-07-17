@@ -64,16 +64,10 @@ jobs:
         command: 'install'
         workingDir: './frontend'
         verbose: true
-    - task: Npm@1
-      displayName: NPM Build Production
-      inputs:
-        command: 'custom'
-        workingDir: './frontend'
-        customCommand: 'run-script build --prod'
     - task: AzureStaticWebApp@0
       displayName: Deploy to Azure Static Web App
       inputs:
         app_location: './frontend'
         app_build_command: 'npm run-script build --prod'
-        output_location: './fontend/build'
+        output_location: 'build'
         azure_static_web_apps_api_token: $(DeploymentToken)
