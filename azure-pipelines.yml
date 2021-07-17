@@ -1,0 +1,72 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+jobs:
+- job: dotnet_build_deploy
+  displayName: Build & Deploy DotNet Web Api
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: DotNet Restore
+    inputs:
+      command: 'restore'
+      projects: './astro-world-api/astro-world-api.csproj'
+      feedsToUse: 'select'
+  - task: DotNetCoreCLI@2
+    displayName: DotNet Build
+    inputs:
+      command: 'build'
+      projects: './astro-world-api/astro-world-api.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName: DotNet Publish
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: true
+  - task: AzureRmWebAppDeployment@4
+    displayName: Azure Web App Deploy
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Free Trial(b280efef-1f54-4ab4-9cd9-ed512f576405)'
+      appType: 'webAppLinux'
+      WebAppName: 'astroblue-world-api'
+      packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+      RuntimeStack: 'DOTNETCORE|5.0'
+      AppSettings: '-Scope $(Scope) -GrantType $(GrantType) -ConnectionStrings__AstroWorldDbContext $(AstroWorldDbContext) -ClientSecret $(ClientSecret) -AzureStorageConfig__FileShareUri $(FileShareUri) -AzureStorageConfig__AccountName $(AccountName) -AzureStorageConfig__AccountKey $(AccountKey) -AzureAd__TenantId $(TenantId) -AzureAd__Instance $(Instance) -AzureAd__ClientId $(ClientId) -ApiKey $(ApiKey)'
+- job: react_build_deploy
+  displayName: Build & Deploy React App
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - task: CmdLine@2
+      displayName: Creat .env file with correct values
+      inputs:
+        script: 'touch .env && echo ''REACT_APP_API_URL=''$(ApiUrl) >> .env && echo ''REACT_APP_API_KEY=''$(ApiKey) >> .env && cat .env'
+        workingDirectory: './frontend'
+    - task: Npm@1
+      displayName: NPM Install
+      inputs:
+        command: 'install'
+        workingDir: './frontend'
+        verbose: true
+    - task: AzureStaticWebApp@0
+      displayName: Deploy to Azure Static Web App
+      inputs:
+        app_location: './frontend'
+        app_build_command: 'npm run-script build --prod'
+        output_location: 'build'
+        azure_static_web_apps_api_token: $(DeploymentToken)
