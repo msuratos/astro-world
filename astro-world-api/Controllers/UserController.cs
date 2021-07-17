@@ -4,12 +4,14 @@ using astro_world_api.Dtos;
 using astro_world_api.Persistance;
 using astro_world_api.Persistance.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace astro_world_api.Controllers
 {
+  [Authorize]
   [ApiController]
   [Route("[controller]")]
   public class UserController : ControllerBase
