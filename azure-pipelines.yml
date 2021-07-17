@@ -35,14 +35,14 @@ steps:
     publishWebProjects: true
     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
-    
+
 - task: AzureRmWebAppDeployment@4
   displayName: Azure Web App Deploy
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Free Trial(b280efef-1f54-4ab4-9cd9-ed512f576405)'
     appType: 'webAppLinux'
-    WebAppName: 'astroblue-world'
+    WebAppName: 'astroblue-world-api'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     RuntimeStack: 'DOTNETCORE|5.0'
     AppSettings: '-Scope $(Scope) -GrantType $(GrantType) -ConnectionStrings__AstroWorldDbContext $(AstroWorldDbContext) -ClientSecret $(ClientSecret) -AzureStorageConfig__FileShareUri $(FileShareUri) -AzureStorageConfig__AccountName $(AccountName) -AzureStorageConfig__AccountKey $(AccountKey) -AzureAd__TenantId $(TenantId) -AzureAd__Instance $(Instance) -AzureAd__ClientId $(ClientId) -ApiKey $(ApiKey)'
