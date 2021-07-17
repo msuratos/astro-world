@@ -42,6 +42,6 @@ steps:
     azureSubscription: 'Free Trial(b280efef-1f54-4ab4-9cd9-ed512f576405)'
     appType: 'webAppLinux'
     WebAppName: 'astroblue-world'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     RuntimeStack: 'DOTNETCORE|5.0'
     AppSettings: '-Scope $(Scope) -GrantType $(GrantType) -ConnectionStrings:AstroWorldDbContext $(AstroWorldDbContext) -ClientSecret $(ClientSecret) -AzureStorageConfig:FileShareUri $(FileShareUri) -AzureStorageConfig:AccountName $(AccountName) -AzureStorageConfig:AccountKey $(AccountKey) -AzureAd:TenantId $(TenantId) -AzureAd:Instance $(Instance) -AzureAd:ClientId $(ClientId) -ApiKey $(ApiKey)'
