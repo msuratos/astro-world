@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Card } from "ui-neumorphism";
 
 import RootContext from './RootContext';
 import AstroBackground from './components/AstroBackgroud';
@@ -8,8 +9,10 @@ import App from './Pages/App';
 import Anonymous from './Pages/Anonymous';
 import Raffle from './Pages/Raffle';
 import reportWebVitals from './reportWebVitals';
-import './index.css';
 import { getAccessToken } from './api/tokenApi';
+
+import 'ui-neumorphism/dist/index.css';
+import './index.css';
 
 // Get access token first before rendering the application
 // This token is used to talk to api
@@ -19,14 +22,16 @@ getAccessToken().then((value) => {
       <>
         <RootContext.Provider value={{ accessToken: value }}>
           <AstroBackground />
-          <div className="container">
-            <Router>
-              <Switch>
-                <Route exact path="/" component={App} />
-                <Route exact path="/anonymous" component={Anonymous} />
-                <Route exact path="/raffle" component={Raffle} />
-              </Switch>
-            </Router>
+          <div style={{marginTop: '30%', display: 'flex', alignContent: 'center', justifyContent: 'center'}}>
+            <Card className="card-custom" rounded>
+              <Router>
+                <Switch>
+                  <Route exact path="/" component={App} />
+                  <Route exact path="/anonymous" component={Anonymous} />
+                  <Route exact path="/raffle" component={Raffle} />
+                </Switch>
+              </Router>
+            </Card>
           </div>
         </RootContext.Provider>
       </>

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { Button, TextField } from "ui-neumorphism";
 
 import { createUser } from "../api/userApi";
 import RootContext from '../RootContext';
 
 interface UserInfoProps {
   display: React.Dispatch<React.SetStateAction<boolean>>
-  showloading: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const UserInfo = (props:UserInfoProps) => {
@@ -14,14 +14,15 @@ const UserInfo = (props:UserInfoProps) => {
   const rootContext = useContext(RootContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const cancel = () => history.push('/');
   const create = async () => {
     try {
       // Call api to create user
-      props.showloading(true);
+      setLoading(true);
       const resp = await createUser({ FirstName: firstName, LastName: lastName }, rootContext.accessToken);
-      props.showloading(false);
+      setLoading(false);
       if (!resp.ok) throw resp;
   
       // Set expiration date to the next day for cookie
@@ -46,13 +47,11 @@ const UserInfo = (props:UserInfoProps) => {
   return (
     <>
       <h3>Enter Information</h3>
-      <label htmlFor="firstname">First Name</label>
-      <input type="text" name="firstname" onChange={(e) => setFirstName(e.target.value)} value={firstName} />
-      <label htmlFor="lastname">Last Name</label>
-      <input type="text" name="lastname" onChange={(e) => setLastName(e.target.value)} value={lastName} />
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-        <button className="btn btn__primary" onClick={create}>Next</button>
-        <button className="btn btn__secondary" onClick={cancel}>Cancel</button>
+      <TextField label="firstname" loading={loading} onChange={(e:any) => setFirstName(e.value)} value={firstName} />
+      <TextField label="lastname" loading={loading} onChange={(e:any) => setLastName(e.value)} value={lastName} />
+      <div className="btn-div">
+        <Button color='var(--light-bg-light-shadow)' bgColor='var(--primary)' className="btn-custom" onClick={create}>Next</Button>
+        <Button className="btn-custom" onClick={cancel}>Cancel</Button>
       </div>
     </>
   )

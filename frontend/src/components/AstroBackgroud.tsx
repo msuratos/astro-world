@@ -24,10 +24,11 @@ const AstroBackground = () => {
       position: 'absolute',
       maxHeight: '10%',
       maxWidth: '10%',
-      backgroundColor: '#f9f9f9',
+      backgroundColor: 'var(--light-bg)',
       top: `${topOffset}px`,
       left: `${leftOffset}px`,
-      transform: `rotateZ(${rotateZ}deg)`
+      transform: `rotateZ(${rotateZ}deg)`,
+      zIndex: -1
     };
 
     return {
@@ -46,10 +47,11 @@ const AstroBackground = () => {
       position: 'absolute',
       maxHeight: '25%',
       maxWidth: '25%',
-      backgroundColor: '#f9f9f9',
+      backgroundColor: 'var(--light-bg)',
       top: `${topOffset}px`,
       left: `${leftOffset}px`,
-      transform: `rotateZ(${rotateZ}deg)`
+      transform: `rotateZ(${rotateZ}deg)`,
+      zIndex: -1
     };
 
     return {
@@ -70,7 +72,8 @@ const AstroBackground = () => {
       maxWidth: '5%',
       top: `${topOffset}px`,
       left: `${leftOffset}px`,
-      transform: `rotateZ(${rotateZ}deg)`
+      transform: `rotateZ(${rotateZ}deg)`,
+      zIndex: -1
     };
 
     return {
@@ -84,9 +87,10 @@ const AstroBackground = () => {
     position: 'absolute',
     maxHeight: '30%',
     maxWidth: '30%',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'var(--light-bg)',
     top: `calc(10% - ${Math.random() * 100}px)`,
-    left: `${Math.random() * (window.innerWidth - 50)}px`
+    left: `${Math.random() * (window.innerWidth - 50)}px`,
+    zIndex: -1
   };
 
   return (

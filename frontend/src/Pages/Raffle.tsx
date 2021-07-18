@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import ImageUpload from "../components/ImageUpload";
-import Loading from "../components/Loading";
 import UserInfo from "../components/UserInfo";
 import './Raffle.css';
 
 const Raffle = () => {
   const [showUserInfo, setShowUserInfo] = useState(true);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (document.cookie.includes('displayname')) setShowUserInfo(false);
@@ -15,9 +13,8 @@ const Raffle = () => {
   return (
     <div className="raffle">
       <h2 className="raffle-title">RAFFLE</h2>
-      { showUserInfo && <UserInfo display={setShowUserInfo} showloading={setLoading} />}
-      { !showUserInfo && <ImageUpload showloading={setLoading} isAnonymous={false} /> }
-      { loading && <Loading /> }
+      { showUserInfo && <UserInfo display={setShowUserInfo} />}
+      { !showUserInfo && <ImageUpload isAnonymous={false} /> }
     </div>
   );
 };
