@@ -1,5 +1,5 @@
 :root {
-  --primary-light: #8abdff;
+  --primary-light: #85bfe3;
   --primary: #76a0ff;
   --primary-dark: #2052f5;
   --white: #ffffff;
@@ -20,7 +20,7 @@
 }
 
 body {
-  background-color: #f9f9f9;
+  background-color: var(--light-bg);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
   'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Adventure-Subtitles',
@@ -33,71 +33,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.btn {
-  background: var(--greyLight-1);
-  border: none;
-  border-radius: 1rem;
-  box-shadow: 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
-  cursor: pointer;
-  height: 4rem;
-  margin: .7rem .2rem;
-  transition: 0.3s ease;
-  width: 7rem;
+label {
+  font-weight: bold;
 }
 
-.btn__primary {
-  grid-column: 1/2;
-  grid-row: 4/5;
-  background: var(--primary);
-  box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-light), inset -0.2rem -0.2rem 1rem var(--primary-dark), 0.3rem 0.3rem 0.6rem var(--greyLight-2), -0.2rem -0.2rem 0.5rem var(--white);
-  color: var(--greyLight-1);
+.card-custom {
+  width: 90%;
 }
 
-.btn__primary:hover {
-  color: var(--white);
-}
-
-.btn__primary:active {
-  box-shadow: inset 0.2rem 0.2rem 1rem var(--primary-dark), inset -0.2rem -0.2rem 1rem var(--primary-light);
-}
-
-.btn__secondary {
-  color: var(--greyDark);
-}
-
-.btn__secondary:hover {
-  color: var(--primary);
-}
-
-.btn__secondary:active {
-  box-shadow: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2), inset -0.2rem -0.2rem 0.5rem var(--white);
-}
-
-.container {
-  background: var(--greyLight-1);
+.loading {
+  background-color: #c0c0c069;
   border-radius: 1.5rem;
-  box-shadow: 0.8rem 0.8rem 1.4rem var(--greyLight-2), -0.2rem -0.2rem 1.8rem var(--white);
-  left: 50%;
+  height: 100%;
+  left: 0;
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -60%);
-  width: 80%;;
-  /* -webkit-border-radius: 5px; 
-  -webkit-box-shadow: 12px 12px 24px #d9d9d9, -12px -12px 24px #ffffff; */
+  text-align: center;
+  top: 0;
+  width: 100%;
 }
-
-  .container label {
-    color: #636363;
-    display: block;
-  }
-
-  .loading {
-    background-color: #c0c0c069;
-    border-radius: 1.5rem;
-    height: 100%;
-    left: 0;
-    position: absolute;
-    text-align: center;
-    top: 0;
-    width: 100%;
-  }
