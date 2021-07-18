@@ -44,8 +44,10 @@ label {
 .loading {
   background-color: #c0c0c069;
   border-radius: 1.5rem;
+  display: flex;
   height: 100%;
   left: 0;
+  place-content: center;
   position: absolute;
   text-align: center;
   top: 0;

@@ -4,23 +4,25 @@ import { Alert, Button } from "ui-neumorphism";
 import { uploadImage } from '../api/imageApi';
 import RootContext from '../RootContext';
 import { getCookie } from "../utils/cookieHelper";
+import Loading from './Loading';
 
 interface ImageUploadProps {
-  isAnonymous: boolean,
-  showloading: React.Dispatch<React.SetStateAction<boolean>>
+  isAnonymous: boolean
 };
 
 const ImageUpload = (props:ImageUploadProps) => {
   const [displayName, setDisplayName] = useState('');
   const [successVisible, setSuccessVisible] = useState(false);
   const [failVisible, setFailVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // const [percent, setPercent] = useState(0);
   const rootContext = useContext(RootContext);
   const imageInputRef = useRef<any>({});
 
   const uploadImageFormSubmit = async (e:FormEvent<HTMLFormElement>) => {
     setSuccessVisible(false);
     setFailVisible(false);
-    props.showloading(true);
+    setLoading(true);
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -35,7 +37,7 @@ const ImageUpload = (props:ImageUploadProps) => {
     }
 
     imageInputRef.current.value = '';
-    props.showloading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const ImageUpload = (props:ImageUploadProps) => {
             {failVisible && <Alert rounded type="error" border="left">Upload Failed</Alert>}
           </div>
         }
+        { loading && <Loading /> }
       </form>
     </>
   );

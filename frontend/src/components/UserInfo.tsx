@@ -7,7 +7,6 @@ import RootContext from '../RootContext';
 
 interface UserInfoProps {
   display: React.Dispatch<React.SetStateAction<boolean>>
-  showloading: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const UserInfo = (props:UserInfoProps) => {
