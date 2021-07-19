@@ -16,8 +16,8 @@ const AstroBackground = () => {
   const starArray = Array.from('There are too many stars in the whole universe!');
 
   const rockets: IStyle[] = rocketArray.map(() => {
-    const topOffset = Math.random() * window.innerHeight;
-    const leftOffset = Math.random() * window.innerWidth;
+    const topOffset = Math.random() * window.innerHeight - 10;
+    const leftOffset = Math.random() * window.innerWidth - 10;
     const rotateZ = Math.random() * 360;
 
     const style: React.CSSProperties = {
@@ -39,8 +39,8 @@ const AstroBackground = () => {
     }
   });
   const planets: IStyle[] = planetArray.map(() => {
-    const topOffset = Math.random() * window.innerHeight;
-    const leftOffset = Math.random() * window.innerWidth;
+    const topOffset = Math.random() * window.innerHeight - 10;
+    const leftOffset = Math.random() * window.innerWidth - 10;
     const rotateZ = Math.random() * 360;
 
     const style: React.CSSProperties = {
@@ -62,8 +62,8 @@ const AstroBackground = () => {
     }
   });
   const stars: IStyle[] = starArray.map(() => {
-    const topOffset = Math.random() * window.innerHeight;
-    const leftOffset = Math.random() * window.innerWidth;
+    const topOffset = Math.random() * window.innerHeight - 10;
+    const leftOffset = Math.random() * window.innerWidth - 10;
     const rotateZ = Math.random() * 360;
 
     const style: React.CSSProperties = {
