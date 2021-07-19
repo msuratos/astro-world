@@ -23,7 +23,7 @@ function App() {
     }
   };
 
-  const avatar = (<Avatar src={logo} size={125} bgColor='var(--white)' className="avatar-custom" />);
+  const avatar = (<Avatar src={logo} style={{width: 'auto'}} size={125} bgColor='var(--white)' className="avatar-custom" />);
 
   return (
     <>

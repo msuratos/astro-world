@@ -1,7 +1,6 @@
 .avatar-custom {
   border: 2px solid var(--primary-light);
   image-rendering: -web-kit-optimize-contrast;
-  image-rendering: optimizeQuality;
 }
 
 .card-header-custom {
@@ -41,9 +40,11 @@
 }
 
 .title-name {
+  font-family: 'Adventure-Subtitles';
   font-size: x-large;
 }
 
 .title-desc {
+  font-family: 'Adventure-Subtitles';
   font-size: medium;
 }
