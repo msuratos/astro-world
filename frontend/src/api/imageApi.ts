@@ -1,4 +1,3 @@
-import React from 'react';
 import { getCookie } from "../utils/cookieHelper";
 
 export const uploadImage = async (isAnonymous: boolean, formData: FormData, accessToken: string):Promise<Response> => {
