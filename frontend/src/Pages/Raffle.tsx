@@ -12,7 +12,6 @@ const Raffle = () => {
 
   return (
     <div className="raffle">
-      <h2 className="raffle-title">RAFFLE</h2>
       { showUserInfo && <UserInfo display={setShowUserInfo} />}
       { !showUserInfo && <ImageUpload isAnonymous={false} /> }
     </div>
