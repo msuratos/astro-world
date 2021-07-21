@@ -106,7 +106,13 @@ namespace astro_world_api.Controllers
               _permittedExtensions, _fileSizeLimit);
 
             if (!ModelState.IsValid) {
-              var errorMessage = ModelState.ErrorCount > 0 ? ModelState.Select(s => s.Value.Errors.Select(se => se.ErrorMessage)) : null;
+              var errorMessage = string.Empty;
+
+              foreach (var error in ModelState.Select(s => s.Value.Errors))
+              {
+                errorMessage += error.Select(s => s.ErrorMessage).FirstOrDefault() + " \r\n";
+              }
+
               _logger.LogError($"Error processing streamed file. {errorMessage}");
               return BadRequest(ModelState);
             }

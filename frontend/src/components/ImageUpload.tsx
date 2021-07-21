@@ -16,6 +16,7 @@ const ImageUpload = (props:ImageUploadProps) => {
   const [displayName, setDisplayName] = useState('');
   const [successVisible, setSuccessVisible] = useState(false);
   const [failVisible, setFailVisible] = useState(false);
+  const [failMessage, setFailMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const rootContext = useContext(RootContext);
   const imageInputRef = useRef<any>({});
@@ -36,6 +37,7 @@ const ImageUpload = (props:ImageUploadProps) => {
 
     if (!resp.ok) {
       setFailVisible(true);
+      setFailMessage(await resp.text());
       setTimeout(() => setFailVisible(false), 3000);
     } else {
       setSuccessVisible(true);
@@ -63,7 +65,7 @@ const ImageUpload = (props:ImageUploadProps) => {
           (successVisible || failVisible) &&
           <div style={{margin: '1rem'}}>
             {successVisible && <Alert rounded type="success" border="left">Success!</Alert>}
-            {failVisible && <Alert rounded type="error" border="left">Upload Failed</Alert>}
+            {failVisible && <Alert rounded type="error" border="left">Upload Failed. {failMessage}</Alert>}
           </div>
         }
         { loading && <Loading /> }
