@@ -248,12 +248,12 @@ namespace astro_world_api.Utilities
                 // for files (when possible) for all file types you intend
                 // to allow on the system and perform the file signature
                 // check.
-                /*
-                if (!_fileSignature.ContainsKey(ext))
+                
+                if (_fileSignature.ContainsKey(ext))
                 {
                     return true;
                 }
-                */
+               
 
                 // File signature check
                 // --------------------
@@ -262,9 +262,10 @@ namespace astro_world_api.Utilities
                 // file signature.
                 var signatures = _fileSignature[ext];
                 var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
-
-                return signatures.Any(signature => 
+                var validSignature = signatures.Any(signature => 
                     headerBytes.Take(signature.Length).SequenceEqual(signature));
+
+                return validSignature;
             }
         }
     }
