@@ -36,8 +36,9 @@ const ImageUpload = (props:ImageUploadProps) => {
     const resp = await uploadImage(props.isAnonymous, formData, rootContext.accessToken);
 
     if (!resp.ok) {
+      const responseBody = await resp.json();
+      setFailMessage(responseBody.file);
       setFailVisible(true);
-      setFailMessage(await resp.text());
       setTimeout(() => setFailVisible(false), 3000);
     } else {
       setSuccessVisible(true);

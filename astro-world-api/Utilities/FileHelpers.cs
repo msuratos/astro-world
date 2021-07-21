@@ -171,9 +171,10 @@ namespace astro_world_api.Utilities
                         contentDisposition.FileName.Value, memoryStream, 
                         permittedExtensions))
                     {
-                        if (Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant() != ".mov")
+                        var fileType = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
+                        if (fileType != ".mov")
                             modelState.AddModelError("File",
-                                "The file type isn't permitted or the file's " +
+                                $"The file type ({fileType}) isn't permitted or the file's " +
                                 "signature doesn't match the file's extension.");
                     }
                     else
