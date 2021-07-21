@@ -171,9 +171,11 @@ namespace astro_world_api.Utilities
                         contentDisposition.FileName.Value, memoryStream, 
                         permittedExtensions))
                     {
-                        modelState.AddModelError("File",
-                            "The file type isn't permitted or the file's " +
-                            "signature doesn't match the file's extension.");
+                        var fileType = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
+                        if (fileType != ".mov")
+                            modelState.AddModelError("File",
+                                $"The file type ({fileType}) isn't permitted or the file's " +
+                                "signature doesn't match the file's extension.");
                     }
                     else
                     {
@@ -186,7 +188,6 @@ namespace astro_world_api.Utilities
                 modelState.AddModelError("File",
                     "The upload failed. Please contact the Help Desk " +
                     $" for support. Error: {ex.HResult}");
-                // Log the exception
             }
 
             return Array.Empty<byte>();
@@ -247,12 +248,12 @@ namespace astro_world_api.Utilities
                 // for files (when possible) for all file types you intend
                 // to allow on the system and perform the file signature
                 // check.
-                /*
-                if (!_fileSignature.ContainsKey(ext))
+                
+                if (_fileSignature.ContainsKey(ext))
                 {
                     return true;
                 }
-                */
+               
 
                 // File signature check
                 // --------------------
@@ -261,9 +262,10 @@ namespace astro_world_api.Utilities
                 // file signature.
                 var signatures = _fileSignature[ext];
                 var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
-
-                return signatures.Any(signature => 
+                var validSignature = signatures.Any(signature => 
                     headerBytes.Take(signature.Length).SequenceEqual(signature));
+
+                return validSignature;
             }
         }
     }

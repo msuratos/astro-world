@@ -94,7 +94,8 @@ namespace astro_world_api.Controllers
           {
             // Don't trust the file name sent by the client. To display the file name, HTML-encode the value.
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
-            var trustedFileNameForFileStorage = Path.GetRandomFileName();
+            var extension = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
+            var trustedFileNameForFileStorage = $"{userid}-{Path.GetRandomFileName()}{extension}";
 
             // **WARNING!**
             // In the following example, the file is saved without scanning the file's contents. In most production
@@ -104,23 +105,31 @@ namespace astro_world_api.Controllers
             var streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState,
               _permittedExtensions, _fileSizeLimit);
 
-            if (!ModelState.IsValid)
-            {
+            if (!ModelState.IsValid) {
+              var errorMessage = string.Empty;
+
+              foreach (var error in ModelState.Select(s => s.Value.Errors))
+              {
+                errorMessage += error.Select(s => s.ErrorMessage).FirstOrDefault() + " \r\n";
+              }
+
+              _logger.LogError($"Error processing streamed file. {errorMessage}");
               return BadRequest(ModelState);
             }
 
             // Upload to Azure
+            if (streamedFileContent == Array.Empty<byte>()) break;
             var stream = new MemoryStream(streamedFileContent);
             await StorageHelper.UploadFileToStorage(stream, trustedFileNameForFileStorage, _azureStorageConfig);
             _logger.LogInformation($"Uploaded file '{trustedFileNameForDisplay}' saved to " +
-                  $"'{_azureStorageConfig.FileShareUri}' as {trustedFileNameForFileStorage}");
+                  $"'{_azureStorageConfig.FileShareUri}/images' as {trustedFileNameForFileStorage}");
 
             // Save to database. Associate file to user
             await _context.Images.AddAsync(new Image
             {
               CreatedDate = DateTimeOffset.Now.DateTime,
-              FkUserId = userid == 0 ? null : userid,
-              PathStored = $"{_azureStorageConfig.FileShareUri}/images/{trustedFileNameForFileStorage}"
+              FkUserId = userid,
+              PathStored = $"/images/{trustedFileNameForFileStorage}"
             });
             await _context.SaveChangesAsync();
           }
@@ -132,21 +141,6 @@ namespace astro_world_api.Controllers
       }
 
       return Created(nameof(ImageController), null);
-    }
-
-    private static Encoding GetEncoding(MultipartSection section)
-    {
-      var hasMediaTypeHeader =
-          MediaTypeHeaderValue.TryParse(section.ContentType, out var mediaType);
-
-      // UTF-7 is insecure and shouldn't be honored. UTF-8 succeeds in 
-      // most cases.
-      if (!hasMediaTypeHeader || Encoding.UTF8.Equals(mediaType.Encoding))
-      {
-        return Encoding.UTF8;
-      }
-
-      return mediaType.Encoding;
     }
   }
 }
