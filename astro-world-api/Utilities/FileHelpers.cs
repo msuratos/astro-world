@@ -171,9 +171,10 @@ namespace astro_world_api.Utilities
                         contentDisposition.FileName.Value, memoryStream, 
                         permittedExtensions))
                     {
-                        modelState.AddModelError("File",
-                            "The file type isn't permitted or the file's " +
-                            "signature doesn't match the file's extension.");
+                        if (Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant() != ".mov")
+                            modelState.AddModelError("File",
+                                "The file type isn't permitted or the file's " +
+                                "signature doesn't match the file's extension.");
                     }
                     else
                     {
@@ -186,7 +187,6 @@ namespace astro_world_api.Utilities
                 modelState.AddModelError("File",
                     "The upload failed. Please contact the Help Desk " +
                     $" for support. Error: {ex.HResult}");
-                // Log the exception
             }
 
             return Array.Empty<byte>();

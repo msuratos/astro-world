@@ -94,7 +94,7 @@ namespace astro_world_api.Controllers
           {
             // Don't trust the file name sent by the client. To display the file name, HTML-encode the value.
             var trustedFileNameForDisplay = WebUtility.HtmlEncode(contentDisposition.FileName.Value);
-            var extension = Path.GetExtension(contentDisposition.FileName.Value);
+            var extension = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
             var trustedFileNameForFileStorage = $"{userid}-{Path.GetRandomFileName()}{extension}";
 
             // **WARNING!**
@@ -118,6 +118,7 @@ namespace astro_world_api.Controllers
             }
 
             // Upload to Azure
+            if (streamedFileContent == Array.Empty<byte>()) break;
             var stream = new MemoryStream(streamedFileContent);
             await StorageHelper.UploadFileToStorage(stream, trustedFileNameForFileStorage, _azureStorageConfig);
             _logger.LogInformation($"Uploaded file '{trustedFileNameForDisplay}' saved to " +
