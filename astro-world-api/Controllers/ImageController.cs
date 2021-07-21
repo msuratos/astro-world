@@ -105,7 +105,11 @@ namespace astro_world_api.Controllers
             var streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState,
               _permittedExtensions, _fileSizeLimit);
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) {
+              var errorMessage = ModelState.ErrorCount > 0 ? ModelState.Select(s => s.Value.Errors.Select(se => se.ErrorMessage)) : null;
+              _logger.LogError($"Error processing streamed file. {errorMessage}");
+              return BadRequest(ModelState);
+            }
 
             // Upload to Azure
             var stream = new MemoryStream(streamedFileContent);
