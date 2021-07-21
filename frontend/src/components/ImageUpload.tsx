@@ -37,7 +37,7 @@ const ImageUpload = (props:ImageUploadProps) => {
 
     if (!resp.ok) {
       const responseBody = await resp.json();
-      setFailMessage(responseBody[0].file);
+      setFailMessage(responseBody.File[0]);
       setFailVisible(true);
       setTimeout(() => setFailVisible(false), 3000);
     } else {
