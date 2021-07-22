@@ -64,6 +64,7 @@ namespace astro_world_api.Controllers
             s.PathStored
           }).ToList()
         })
+        .OrderByDescending(o => o.Images.Count)
         .ToListAsync();
 
       return Ok(users);

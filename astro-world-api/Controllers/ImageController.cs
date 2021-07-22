@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Storage;
+using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -52,6 +54,38 @@ namespace astro_world_api.Controllers
     {
       _logger.LogDebug($"Admin is getting all the images for user {userid}");
       return await _context.Images.Where(w => w.FkUserId == userid).ToListAsync();
+    }
+
+    [HttpGet]
+    [Route("admin")]
+    public string GetImageUrl(string imagePath)
+    {
+      // Get the account details from app settings
+      string accountName = _azureStorageConfig.AccountName;
+      string accountKey = _azureStorageConfig.AccountKey;
+
+      ShareSasBuilder fileSAS = new ShareSasBuilder()
+      {
+        ShareName = "astro",
+        FilePath = imagePath.Substring(1),
+        Resource = "f",                               // Specify an Azure file resource
+        StartsOn = DateTimeOffset.UtcNow,                // Starts at the current time
+        ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(5)  // Expires in 24 hours
+      };
+
+      // Set the permissions for the SAS
+      fileSAS.SetPermissions(ShareAccountSasPermissions.Read);
+
+      // Create a SharedKeyCredential that we can use to sign the SAS token
+      StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
+
+      // Build a SAS URI
+      var fileSasPath = WebUtility.HtmlEncode(fileSAS.FilePath);
+      UriBuilder fileSasUri = new UriBuilder($"https://{accountName}.file.core.windows.net/{fileSAS.ShareName}/{fileSasPath}");
+      fileSasUri.Query = fileSAS.ToSasQueryParameters(credential).ToString();
+
+      // Return the URI
+      return fileSasUri.Uri.AbsoluteUri;
     }
 
     // Refer to https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-5.0#upload-large-files-with-streaming
@@ -105,7 +139,8 @@ namespace astro_world_api.Controllers
             var streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState,
               _permittedExtensions, _fileSizeLimit);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
               var errorMessage = string.Empty;
 
               foreach (var error in ModelState.Select(s => s.Value.Errors))
