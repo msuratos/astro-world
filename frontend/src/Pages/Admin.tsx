@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Table } from "ui-neumorphism";
 
 import { getAllUsersWithTheirImages, getImageUrl } from "../api/adminApi";
+import AdminKey from "../components/AdminKey";
 import Loading from "../components/Loading";
 import UserImages from "../components/UserImages";
 import RootContext from "../RootContext";
@@ -11,6 +12,7 @@ const Admin = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [userImages, setUserImages] = useState<any[]>([{}]);
   const [loading, setLoading] = useState(true);
+  const [showAdminKey, setShowAdminKey] = useState(true);
   const [showUserImages, setShowUserImages] = useState(false);
 
   const createItem = (images: any[], name: string, imageCount: Number) => {
@@ -73,8 +75,9 @@ const Admin = () => {
 
   return (
     <>
-      {!showUserImages && <Table dense headers={headers} items={users} />}
-      {showUserImages && <UserImages userImages={userImages} onBackClick={onBackClick} />}
+      {showAdminKey && <AdminKey showAdminKey={setShowAdminKey} />}
+      {!showAdminKey && !showUserImages && <Table dense headers={headers} items={users} />}
+      {!showAdminKey && showUserImages && <UserImages userImages={userImages} onBackClick={onBackClick} />}
       {loading && <Loading />}
     </>
   )
