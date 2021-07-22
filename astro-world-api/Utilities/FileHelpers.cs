@@ -172,10 +172,7 @@ namespace astro_world_api.Utilities
                         permittedExtensions))
                     {
                         var fileType = Path.GetExtension(contentDisposition.FileName.Value).ToLowerInvariant();
-                        if (fileType != ".mov")
-                            modelState.AddModelError("File",
-                                $"The file type ({fileType}) isn't permitted or the file's " +
-                                "signature doesn't match the file's extension.");
+                        modelState.AddModelError("File", $"The file type ({fileType}) isn't permitted");
                     }
                     else
                     {
@@ -196,16 +193,12 @@ namespace astro_world_api.Utilities
         private static bool IsValidFileExtensionAndSignature(string fileName, Stream data, string[] permittedExtensions)
         {
             if (string.IsNullOrEmpty(fileName) || data == null || data.Length == 0)
-            {
                 return false;
-            }
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
 
             if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
-            {
                 return false;
-            }
 
             data.Position = 0;
 
@@ -240,20 +233,7 @@ namespace astro_world_api.Utilities
                     }
 
                     return true;
-                }
-
-                // Uncomment the following code block if you must permit
-                // files whose signature isn't provided in the _fileSignature
-                // dictionary. We recommend that you add file signatures
-                // for files (when possible) for all file types you intend
-                // to allow on the system and perform the file signature
-                // check.
-                
-                if (_fileSignature.ContainsKey(ext))
-                {
-                    return true;
-                }
-               
+                }               
 
                 // File signature check
                 // --------------------
@@ -264,6 +244,11 @@ namespace astro_world_api.Utilities
                 var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
                 var validSignature = signatures.Any(signature => 
                     headerBytes.Take(signature.Length).SequenceEqual(signature));
+
+                // If it's part of the accepted file signature list, but it's
+                // not a valid signature, still validate it as true
+                if (!validSignature && _fileSignature.ContainsKey(ext))
+                    return true;
 
                 return validSignature;
             }
