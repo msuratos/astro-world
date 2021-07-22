@@ -55,7 +55,12 @@ jobs:
     - task: CmdLine@2
       displayName: Creat .env file with correct values
       inputs:
-        script: 'touch .env && echo ''REACT_APP_API_URL=''$(ApiUrl) >> .env && echo ''REACT_APP_API_KEY=''$(ApiKey) >> .env && cat .env'
+        script: 'touch .env 
+                  && echo ''REACT_APP_API_URL=''$(ApiUrl) >> .env
+                  && echo ''REACT_APP_API_KEY=''$(ApiKey) >> .env
+                  && echo ''REACT_APP_ADMIN_KEY=''$(AdminKey) >> .env
+                  && echo ''GENERATE_SOURCEMAP=false'' >> .env
+                  && cat .env'
         workingDirectory: './frontend'
     - task: CmdLine@2
       displayName: Create staticwebapp.config.json
