@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using astro_world_api.Dtos;
 using astro_world_api.Persistance;
@@ -6,6 +7,7 @@ using astro_world_api.Persistance.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -45,6 +47,26 @@ namespace astro_world_api.Controllers
         _logger.LogError(ex, "Error has occurred creating user");
         throw;
       }
+    }
+
+    [HttpGet]
+    [Route("admin/all")]
+    public async Task<IActionResult> GetAllUsersWithTheirImages() 
+    {
+      var users = await _context.Users.Include(i => i.Images)
+        .Select(s => new 
+        {
+          s.UserId,
+          DisplayName = $"{s.FirstName} {s.LastName}",
+          Images = s.Images.Select(s => new 
+          {
+            s.ImageId,
+            s.PathStored
+          }).ToList()
+        })
+        .ToListAsync();
+
+      return Ok(users);
     }
   }
 }
