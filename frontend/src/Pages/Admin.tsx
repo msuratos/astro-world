@@ -1,26 +1,49 @@
 import { useContext, useEffect, useState } from "react";
 import { Table } from "ui-neumorphism";
 
-import { getAllUsersWithTheirImages } from "../api/adminApi";
+import { getAllUsersWithTheirImages, getImageUrl } from "../api/adminApi";
 import Loading from "../components/Loading";
+import UserImages from "../components/UserImages";
 import RootContext from "../RootContext";
 
 const Admin = () => {
   const rootContext = useContext(RootContext);
-  const [users, setUsers] = useState<any>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [userImages, setUserImages] = useState<any[]>([{}]);
   const [loading, setLoading] = useState(true);
+  const [showUserImages, setShowUserImages] = useState(false);
 
-  const createItem = (userId:Number, name:string, imageCount:Number) => {
+  const createItem = (images: any[], name: string, imageCount: Number) => {
     return {
-      name: (<a href={`#${userId}`}>{name}</a>),
+      name: (<a onClick={() => showImages(images)}>{name}</a>),
       imageCount
     };
   };
 
-  const headers = [
-    { text: 'Display Name', align: 'left', value: 'name' },
-    { text: '# of Images', align: 'right', value: 'imageCount' }
-  ];
+  const showImages = async (images: any[]) => {
+    const imageUrlPromises = images.map(async (image: any) => {
+      const resp = await getImageUrl(image.pathStored, rootContext.accessToken);
+      const url = await resp.text();
+
+      return url;
+    });
+
+    let imageUrls = [];
+    for (let index = 0; index < imageUrlPromises.length; index++) {
+      const element = imageUrlPromises[index];
+      const url = await element;
+      imageUrls.push(url);
+    }
+
+    setLoading(false);
+    setUserImages(imageUrls);
+    setShowUserImages(true);
+  };
+
+  const onBackClick = () => {
+    setShowUserImages(false);
+    setUserImages([]);
+  };
 
   useEffect(() => {
     const getUsers = async () => {
@@ -28,11 +51,11 @@ const Admin = () => {
 
       if (!resp.ok) console.log('Error getting all users with their images');
 
-      const respUsers:[] = await resp.json();
-      const newUsers:any[] = [...users];
+      const respUsers: [] = await resp.json();
+      const newUsers: any[] = [...users];
 
-      respUsers.forEach((val:any) => {
-        const user = createItem(val.userId, val.displayName, val.images.length);
+      respUsers.forEach((val: any) => {
+        const user = createItem(val.images, val.displayName, val.images.length);
         newUsers.push(user);
       });
 
@@ -43,10 +66,16 @@ const Admin = () => {
     getUsers();
   }, [rootContext.accessToken]);
 
+  const headers = [
+    { text: 'Display Name', align: 'left', value: 'name' },
+    { text: '# of Images', align: 'right', value: 'imageCount' }
+  ];
+
   return (
     <>
-      <Table dense headers={headers} items={users} />
-      { loading && <Loading /> }
+      {!showUserImages && <Table dense headers={headers} items={users} />}
+      {showUserImages && <UserImages userImages={userImages} onBackClick={onBackClick} />}
+      {loading && <Loading />}
     </>
   )
 };
