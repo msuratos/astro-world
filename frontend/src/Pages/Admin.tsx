@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Table } from "ui-neumorphism";
+import { useHistory } from "react-router-dom";
+import { Button, Table } from "ui-neumorphism";
 
 import { getAllUsersWithTheirImages, getImageUrl } from "../api/adminApi";
 import AdminKey from "../components/AdminKey";
@@ -8,6 +9,7 @@ import UserImages from "../components/UserImages";
 import RootContext from "../RootContext";
 
 const Admin = () => {
+  const history = useHistory();
   const rootContext = useContext(RootContext);
   const [users, setUsers] = useState<any[]>([]);
   const [userImages, setUserImages] = useState<any[]>([{}]);
@@ -47,6 +49,10 @@ const Admin = () => {
     setUserImages([]);
   };
 
+  const onWinnerClick = () => {
+    history.push('/admin/raffle');
+  };
+
   useEffect(() => {
     const getUsers = async () => {
       const resp = await getAllUsersWithTheirImages(rootContext.accessToken);
@@ -55,6 +61,8 @@ const Admin = () => {
 
       const respUsers: [] = await resp.json();
       const newUsers: any[] = [...users];
+
+      sessionStorage.setItem('users', JSON.stringify(respUsers));
 
       respUsers.forEach((val: any) => {
         const user = createItem(val.images, val.displayName, val.images.length);
@@ -76,7 +84,14 @@ const Admin = () => {
   return (
     <>
       {showAdminKey && <AdminKey showAdminKey={setShowAdminKey} />}
-      {!showAdminKey && !showUserImages && <Table dense headers={headers} items={users} />}
+      { !showAdminKey && !showUserImages && 
+        (
+          <>
+            <Table dense headers={headers} items={users} />
+            <Button style={{margin: '.5rem .2rem', width: '100%'}} onClick={onWinnerClick}>Pick Winner</Button>
+          </>
+        )
+      }
       {!showAdminKey && showUserImages && <UserImages userImages={userImages} onBackClick={onBackClick} />}
       {loading && <Loading />}
     </>

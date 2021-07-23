@@ -6,6 +6,7 @@ import { Avatar, Card, CardContent, CardHeader, Divider } from "ui-neumorphism";
 import RootContext from './RootContext';
 import AstroBackground from './components/AstroBackgroud';
 import Admin from './Pages/Admin';
+import AdminRaffle from './Pages/AdminRaffle';
 import App from './Pages/App';
 import Anonymous from './Pages/Anonymous';
 import Raffle from './Pages/Raffle';
@@ -41,6 +42,7 @@ getAccessToken().then((value) => {
                   <Switch>
                     <Route exact path="/" component={App} />
                     <Route exact path="/admin" component={Admin} />
+                    <Route exact path="/admin/raffle" component={AdminRaffle} />
                     <Route exact path="/anonymous" component={Anonymous} />
                     <Route exact path="/raffle" component={Raffle} />
                   </Switch>

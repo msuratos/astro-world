@@ -11,7 +11,7 @@ const UserImages = (props:UserImagesProps) => {
       {
         props.userImages.map((val, index) => {
           return (
-            <Card>
+            <Card key={`card-index-${index}`}>
               <CardContent>
                 <img alt={`${index}`} key={`image-${index}`} src={`${val}`} style={{ margin: '.2rem .2rem', width: '100%' }} />
               </CardContent>
