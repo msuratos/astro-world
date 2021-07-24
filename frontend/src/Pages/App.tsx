@@ -9,7 +9,7 @@ function App() {
   const [showUploadSection, setShowUploadSection] = useState(false);
 
   const onTriviaClick: Function = (event: any) => window.open('https://forms.gle/E75ttV9TkV9HiXt68');
-  const onHuntClick: Function = (event: any) => console.log('Opening Scavenger Hunt link');
+  const onHuntClick: Function = (event: any) => window.open('https://astro-blue-hunt.azurewebsites.net');
   const onUploadClick: Function = (event: any) => setShowUploadSection(true);
 
   const onButtonClick: Function = (event: any) => {
