@@ -19,12 +19,12 @@ const AdminRaffle = () => {
     usersWithRecords = shuffleArray(usersWithRecords);
 
     let winnerList = [];
-    for (let i = 0; i < 5; i++) {
-      const getWinner = () => {
-        const winnerIndex = Math.round(Math.random() * (usersWithRecords.length - 1));
-        return usersWithRecords[winnerIndex].displayName;
-      };
+    const getWinner = () => {
+      const winnerIndex = Math.round(Math.random() * (usersWithRecords.length - 1));
+      return usersWithRecords[winnerIndex].displayName;
+    };
 
+    for (let i = 0; i < 5; i++) {
       let winnername = getWinner();
       
       while(winnername === winnerList.find(value => value === winnername))

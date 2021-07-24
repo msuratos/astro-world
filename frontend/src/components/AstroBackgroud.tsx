@@ -3,6 +3,7 @@ import rocket from '../assets/images/rocket.png';
 import planet from '../assets/images/planet.png';
 import star from '../assets/images/star.png';
 import sun from '../assets/images/sun.png';
+import './AstroBackground.css';
 
 interface IStyle extends React.CSSProperties {
   topOffset: number,
@@ -18,9 +19,10 @@ const AstroBackground = () => {
   const rockets: IStyle[] = rocketArray.map(() => {
     const topOffset = Math.random() * window.innerHeight - 10;
     const leftOffset = Math.random() * window.innerWidth - 10;
-    const rotateZ = Math.random() * 360;
+    const rotateZ = -45;
 
     const style: React.CSSProperties = {
+      animation: 'rocket-move 10s infinite',
       position: 'absolute',
       maxHeight: '10%',
       maxWidth: '10%',

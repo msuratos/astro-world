@@ -1,0 +1,17 @@
+@keyframes rocket-move {
+  0% {
+    transform: rotateZ(-45deg) translate(-100vw, 100vh);
+  }
+  25% {
+    transform: rotateZ(-45deg) translate(25vw, 25vh);
+  }
+  50% {
+    transform: rotateZ(-90deg) translate(0vw, 25vh);
+  }
+  75% {
+    transform: rotateZ(-90deg) translate(75vw, -50vh);
+  }
+  100% {
+    transform: rotateZ(-90deg) translate(100vw, -100vh);
+  }
+}
