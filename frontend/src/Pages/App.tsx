@@ -41,8 +41,8 @@ function App() {
         showUploadSection &&
         <>
           <div className="btn-div">
-            <Button rounded className="btn-custom" onClick={() => onButtonClick('anonymous')}>Anonymously</Button>
-            <Button rounded className="btn-custom" onClick={() => onButtonClick('raffle')}>For Raffle</Button>
+            <Button rounded className="btn-custom" onClick={() => onButtonClick('anonymous')}>Archives</Button>
+            <Button rounded className="btn-custom" onClick={() => onButtonClick('raffle')}>Raffle</Button>
           </div>
           <Button rounded color='var(--greyDark)' onClick={() => setShowUploadSection(false)}>◀Back</Button>
         </>
